@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi Fyne</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-purple: #1a0122;
+            --light-purple: #bc8cf2;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        .emoji-fix {
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+        }
+
+        body {
+            margin: 0; padding: 0; font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a0122 0%, #4b0082 100%);
+            color: white; display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; overflow: hidden;
+        }
+
+        #welcome-screen {
+            position: fixed; inset: 0; background: var(--dark-purple);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 2000; transition: opacity 1s ease;
+        }
+
+        .heart-play-btn {
+            font-size: 80px; cursor: pointer; background: none; border: none;
+            animation: pulse 1.5s infinite; line-height: 1;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .tulip {
+            position: fixed; top: -50px; font-size: 28px; user-select: none;
+            pointer-events: none; z-index: 1; animation: fall linear forwards;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .container {
+            text-align: center; background: var(--glass); backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px; width: 85%; z-index: 10;
+        }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--light-purple); margin: 0; }
+        .options { display: flex; justify-content: space-around; gap: 15px; margin-top: 30px; }
+        
+        .card {
+            cursor: pointer; transition: 0.3s; padding: 20px; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05); width: 45%;
+            text-decoration: none; color: white; display: block;
+        }
+        .card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.15); }
+        .card span { font-size: 45px; display: block; margin-bottom: 10px; line-height: 1; }
+
+        .overlay {
+            position: fixed; inset: 0; background: rgba(20, 0, 30, 0.98);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 100; padding: 20px;
+        }
+
+        #letter-content {
+            width: 90%; max-width: 450px; max-height: 70vh; 
+            background: #fffafa; color: #2D033B; padding: 30px;
+            border-radius: 15px; font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem; line-height: 1.6; text-align: left;
+            overflow-y: auto; box-sizing: border-box;
+        }
+
+        .close-btn { position: absolute; top: 20px; right: 30px; font-size: 45px; cursor: pointer; color: var(--light-purple); z-index: 110; }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem; margin-bottom: 20px;">For You...</h2>
+        <button class="heart-play-btn emoji-fix" onclick="initExperience()">&#128156;</button>
+        <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.7;">(Tap the heart to start)</p>
+    </div>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <h1>Hi Fyne!</h1>
+        <p>I have two surprises for you...</p>
+        <div class="options">
+            <div class="card" onclick="openLetter()">
+                <span class="emoji-fix">&#9993;&#65039;</span>
+                <p>A Letter</p>
+            </div>
+            
+            <a href="https://youtu.be/I0svP67UW-A?si=Ytcfl6-0J3gNMXCG" target="_blank" class="card" onclick="pauseMusic()">
+                <span class="emoji-fix">&#128156;</span>
+                <p>About You</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="letter-overlay" class="overlay">
+        <span class="close-btn" onclick="closeLetter()">&times;</span>
+        <div id="letter-content">
+            Hi Fyne,<br><br>
+            Wala munang asar ngayon HAHAHA! Seryoso muna. Pero huwag ka mag-alala, simpleng appreciation letter lang 'to.<br><br>
+            Gulat ka may pakulong ganito no? HAHAHA. Anyways, I hope you're doing well ngayong araw. Possible na kagigising mo lang habang binabasa 'to. <br><br>
+            Baka nagtataka ka kung bakit may ganitong pakulo. Wala lang, para maiba lang HAHAHA. It's been months since nakilala kita. I can't imagine na magiging ganito ako sa'yo. <br><br>
+            You've been special and an inspiration to me. And happy ako doon. Sobrang bait mo lang din kasi, and hindi ka mahirap gustuhin. Paalala lang ha? I'm not expecting anything from you. <br><br>
+            Ginawa ko 'to kasi masaya ako and gusto ko lang i-express sarili ko without anything na inaasahang kapalit. Alam mo, chineherish ko na lang din 'yong mga araw na nakakasama pa kita sa isang company. <br><br>
+            I don't know hanggang kailan. And kung dumating man ang time na hindi na tayo magkasama sa trabaho, atleast naexperience ko 'to. Hindi ko alam anong mangyayari after no'n e. <br><br>
+            Galingan mo lang palagi sa kung anong ginagawa mo. Para sa sarili man or pamilya 'yan. And palaging ingatan ang sarili. Alam mo naman na 'yan. Lalo na't isa kang pasaway na nilalang HAHAHA. <br><br>
+            And tatandaan mo, humbleness lang palagi. Maraming humahanga sa'yo. Genuine kang tao, Fyne. Ipagpatuloy mo lang 'yan. Thank you for being nice. Ganda mo palagi! <br><br>
+            <br>RJ
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bg-music');
+
+        function initExperience() {
+            // Unlock audio engine
+            music.play().catch(e => {
+                console.log("Retrying audio...");
+                music.muted = true;
+                music.play();
+                music.muted = false;
+            });
+
+            document.getElementById('welcome-screen').style.opacity = '0';
+            setTimeout(() => { 
+                document.getElementById('welcome-screen').style.display = 'none'; 
+            }, 1000);
+
+            setInterval(createTulip, 400);
+        }
+
+        function createTulip() {
+            const tulip = document.createElement('div');
+            tulip.className = 'tulip emoji-fix';
+            tulip.innerHTML = '&#127799;'; 
+            tulip.style.left = Math.random() * 100 + "vw";
+            tulip.style.animationDuration = Math.random() * 3 + 4 + "s";
+            document.body.appendChild(tulip);
+            setTimeout(() => tulip.remove(), 7000);
+        }
+
+        function openLetter() { document.getElementById('letter-overlay').style.display = 'flex'; }
+        function closeLetter() { document.getElementById('letter-overlay').style.display = 'none'; }
+        function pauseMusic() { music.pause(); }
+    </script>
+</body>
+</html>
